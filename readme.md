@@ -1,1 +1,1 @@
-neste programa estou tentando desenvolver um jogo simples. 
+Neste programa estou tentando desenvolver um jogo simples, o jogador controla um quadrado preto e tem como objetivo pegar um quadrado vermelho qu se move aleatorriamente. 
