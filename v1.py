@@ -104,14 +104,15 @@ while True:
     square_size2 = 25
     square_color2 = RED
     square_position2 = [(1066 - square_size2) , (WINDOW_HEIGHT - square_size2) / 2]
-    square_direction = 3
+    square_direction = 0
 
-    # Variáveis para controlar a mudança aleatória de direção
+    # Variáveis para controlar a mudança de direção
     change_direction_start_time = time.time()
-    change_direction_duration = 1  # segundos
+    change_direction_duration = 0.5  # segundos
+
 
     # Defina a velocidade de movimento do quadrado
-    movement_speed1 = 0.8
+    movement_speed1 = 0.65
     movement_speed2 = 1
 
     # Variável para controlar o tempo de duração da velocidade aumentada
@@ -142,13 +143,13 @@ while True:
                         
                 # Se a tecla de espaço for pressionada, aumente a velocidade do movimento do quadrado
                 elif event.key == pygame.K_SPACE:
-                    movement_speed1 = 2
+                    movement_speed1 = 1.1
                     speed_up_start_time = time.time()
                     pygame.time.set_timer(pygame.USEREVENT, int(speed_up_duration * 1000)) # timer para voltar a velocidade normal depois de 2 segundos
 
             # Se o temporizador expirar, volte a velocidade do movimento do quadrado para 1.2
             elif event.type == pygame.USEREVENT:
-                movement_speed1 = 1.2
+                movement_speed1 = 0.65
 
         # Obtenha as teclas pressionadas
         keys = pygame.key.get_pressed()
@@ -173,19 +174,36 @@ while True:
                 square_position[1] = -square_size
         
         # Mova o segundo quadrado
-        if square_direction == 1:
+
+        hitbox1 = pygame.Rect(square_position[0], square_position[1], 25, 25)
+        hitbox2 = pygame.Rect(square_position2[0], square_position2[1], 25, 25)
+        hitbox3 = pygame.Rect(square_position2[0], square_position2[1], 50, 50)
+        hitbox4 = pygame.Rect(square_position[0], square_position[1], 200, 200)
+
+        if hitbox3.colliderect(hitbox4) or hitbox4.colliderect(hitbox3):
+            if keys[pygame.K_LEFT] :
+                square_direction = 1
+            if keys[pygame.K_UP] :
+                square_direction = 3
+            if keys[pygame.K_RIGHT]:
+                square_direction = 2
+            if keys[pygame.K_DOWN]:
+                square_direction = 4
+
+            
+        if square_direction == 1: # esquerda
             square_position2[0] -= movement_speed2
             if square_position2[0] < -square_size:
                 square_position2[0] = WINDOW_WIDTH
-        if square_direction == 2:
+        if square_direction == 2: # direita
             square_position2[0] += movement_speed2
             if square_position2[0] > WINDOW_WIDTH:
                 square_position2[0] = -square_size
-        if square_direction == 3:
+        if square_direction == 3: # cima
             square_position2[1] -= movement_speed2
             if square_position2[1] < -square_size:
                 square_position2[1] = WINDOW_HEIGHT
-        if square_direction == 4:
+        if square_direction == 4: # baixo
             square_position2[1] += movement_speed2
             if square_position2[1] > WINDOW_HEIGHT:
                 square_position2[1] = -square_size
@@ -194,9 +212,7 @@ while True:
         if time.time() - change_direction_start_time > change_direction_duration:
             square_direction = sample([1, 2, 3, 4], 1)[0]
             change_direction_start_time = time.time()
-        
-        hitbox1 = pygame.Rect(square_position[0], square_position[1], 25, 25)
-        hitbox2 = pygame.Rect(square_position2[0], square_position2[1], 25, 25)
+
         # Limpe a tela
         screen.fill(WHITE)
 
